@@ -48,23 +48,23 @@ def log_scale(value, round=True):
     value = np.round(value) if round else value
     return value
 
-def np_process(img):
+def np_process(img, round):
     qf = np.random.randint(50, 100)
     jpeg = sjpeg.encode_jpeg(img, qf, 'RGB', '444', False)
     block = np_extract_coef_block(jpeg)
     block = np_raster_scan(block)
     code_length = get_block_code_length(block, Y_DC_HUFF_TBL, Y_AC_HUFF_TBL)
     block = block.astype('float32')
-    block = log_scale(block)
+    block = log_scale(block, round)
     code_length = code_length
     return block, code_length
 
-def np_test_process(img):
+def np_test_process(img, round):
     qf = np.random.randint(50, 100)
     jpeg = sjpeg.encode_jpeg(img, qf, 'RGB', '444', False)
     coef = jpeg_to_coef(jpeg)
     code_length = get_image_code_length(coef)
     blocks = coef.reshape([-1, 64])
-    blocks = log_scale(blocks)
+    blocks = log_scale(blocks, round)
     code_length_with_header = len(jpeg) * 8
     return blocks, code_length, code_length_with_header
