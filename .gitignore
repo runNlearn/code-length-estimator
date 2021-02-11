@@ -1,0 +1,14 @@
+# python cache
+__pycache__
+
+# macos directory metadata
+.DS_Store
+
+# Vim backup file
+*~
+
+# created image files
+*.jpg
+*.JPEG
+*.jpeg
+*.JPG
