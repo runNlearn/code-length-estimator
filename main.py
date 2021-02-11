@@ -1,3 +1,4 @@
+import os
 import functools
 
 import tensorflow.keras as tfk
@@ -134,4 +135,12 @@ def build_model(lr):
 
 
 if __name__ == '__main__':
+    try:
+        from google.colab import auth
+        if not auth._check_adc():
+            os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = auth._get_adc_path()
+            auth._gcloud_login()
+            auth._install_adc()
+    except:
+        pass
     app.run(main)
