@@ -26,7 +26,7 @@ def main(argv):
     data_dir = FLAGS.data_dir
     dataset = FLAGS.dataset
     save = FLAGS.save
-    round = FLASG.round
+    round = FLAGS.round
 
     saving_path_template = ('gs://iris-us/jsm/research/code-length-estimator/'
                             '{}-bs{}-lr{}').format(dataset, bs, lr) 
@@ -41,7 +41,7 @@ def main(argv):
                          split='train')
     
     valid_ds = tfds.load(dataset,
-                         data_dir=data_dir
+                         data_dir=data_dir,
                          as_supervised=True,
                          decoders={'image': tfds.decode.SkipDecoding()},
                          split='validation')
