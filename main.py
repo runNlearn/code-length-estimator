@@ -1,3 +1,5 @@
+import functools
+
 import tensorflow as tf
 import tensorflow_datasets as tfds
 
@@ -8,8 +10,12 @@ from absl import logging
 from preprocess import *
 
 FLAGS = flags.FLAGS
-flags.DEFINE_float('lr', 1e-4, 'learning rate')
-flags.DEFINE_integer('bs', 64, 'batch size')
+flags.DEFINE_float('lr', 1e-4, 'Learning rate')
+flags.DEFINE_integer('bs', 64, 'Batch size')
+flags.DEFINE_string('data_dir', 'gs://iris-us/tfds_datasets', 'Path for tfds dataset')
+flags.DEFINE_string('dataset', 'imagenet2012', 'Name of dataset')
+flags.DEFINE_string('save', None, 'Saving option')
+flags.DEFINE_boolean('round', False, 'Round after scale to log2 regime')
 
 
 def main(argv):
@@ -17,15 +23,25 @@ def main(argv):
 
     lr = FLAGS.lr
     bs = FLAGS.bs
+    data_dir = FLAGS.data_dir
+    dataset = FLAGS.dataset
+    save = FLAGS.save
+    round = FLASG.round
 
-    train_ds = tfds.load('imagenet2012',
-                         data_dir='gs://iris-us/tfds_datasets',
+    saving_path_template = ('gs://iris-us/jsm/research/code-length-estimator/'
+                            '{}-bs{}-lr{}').format(dataset, bs, lr) 
+    saving_path_template = saving_path_template + '-round' if round else saving_path_template
+    saving_path_template = saving_path_template + '-steps{:08d}'
+
+
+    train_ds = tfds.load(dataset,
+                         data_dir=data_dir,
                          as_supervised=True,
                          decoders={'image': tfds.decode.SkipDecoding()},
                          split='train')
     
-    valid_ds = tfds.load('imagenet2012',
-                         data_dir='gs://iris-us/tfds_datasets',
+    valid_ds = tfds.load(dataset,
+                         data_dir=data_dir
                          as_supervised=True,
                          decoders={'image': tfds.decode.SkipDecoding()},
                          split='validation')
@@ -37,6 +53,7 @@ def main(argv):
 
     np_train_iter = train_ds.as_numpy_iterator()
     np_valid_iter = valid_ds.as_numpy_iterator()
+    preprocess = functools.partial(np_process, round=round)
     
     steps = 0
 
@@ -44,7 +61,7 @@ def main(argv):
         steps += 1
         train_data = next(np_train_iter) 
     
-        train_blks, train_cls = zip(*map(np_process, train_data))
+        train_blks, train_cls = zip(*map(preprocess, train_data))
         train_blks = np.stack(train_blks, axis=0)
         train_cls = np.stack(train_cls, axis=0)
         tloss, tmetric1, tmetric2 = model.train_on_batch(train_blks, train_cls)
@@ -63,7 +80,7 @@ def main(argv):
             while vsteps < 1000 :
                 vsteps += 1
                 valid_data = next(np_valid_iter)
-                valid_blks, valid_cls = zip(*map(np_process, valid_data))
+                valid_blks, valid_cls = zip(*map(preprocess, valid_data))
                 valid_blks = np.stack(valid_blks, axis=0)
                 valid_cls = np.stack(valid_cls, axis=0)
                 vloss, vmetric1, vmetric2 = model.test_on_batch(valid_blks, valid_cls)
@@ -75,6 +92,10 @@ def main(argv):
                 model.metrics_names[1], sum(vmetric1s) / len(vmetric1s),
                 model.metrics_names[2], sum(vmetric2s) / len(vmetric2s),
             ))
+            if save:
+                saving_path = saving_path_template.format(steps)
+                model.save(saving_path, overwrite=True, include_optimizer=True,
+                           save_format='tf')
 
 
 
