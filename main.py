@@ -1,13 +1,15 @@
 import functools
 
-import tensorflow as tf
-import tensorflow_datasets as tfds
+#import tensorflow as tf
+import tensorflow.keras as tfk
 
-from absl import app
-from absl import flags
-from absl import logging
+#import tensorflow_datasets as tfds
 
-from preprocess import *
+#from absl import app
+#from absl import flags
+#from absl import logging
+
+#from preprocess import *
 
 
 def define_flags():
@@ -103,34 +105,34 @@ def main(argv):
 
 
 def build_model(lr):
-    dc_predictor = tf.keras.Sequential([
-        tf.keras.layers.Reshape((1,)),
-        tf.keras.layers.Dense(16, 'relu'),
-        tf.keras.layers.Dense(16, 'relu'),
-        tf.keras.layers.Dense(16, 'relu'),
-        tf.keras.layers.Dense(1, 'linear'),
+    dc_predictor = tfk.Sequential([
+        tfk.layers.Reshape((1,)),
+        tfk.layers.Dense(16, 'relu'),
+        tfk.layers.Dense(16, 'relu'),
+        tfk.layers.Dense(16, 'relu'),
+        tfk.layers.Dense(1, 'linear'),
     ])
 
-    ac_predictor = tf.keras.Sequential([
-        tf.keras.layers.Reshape((63, 1)),
-        tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(16, return_sequences=True)),
-        tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(16, 'relu'),
-        tf.keras.layers.Dense(16, 'relu'),
-        tf.keras.layers.Dense(16, 'relu'),
-        tf.keras.layers.Dense(1, 'linear'),
+    ac_predictor = tfk.Sequential([
+        tfk.layers.Reshape((63, 1)),
+        tfk.layers.Bidirectional(tfk.layers.LSTM(16, return_sequences=True)),
+        tfk.layers.Flatten(),
+        tfk.layers.Dense(16, 'relu'),
+        tfk.layers.Dense(16, 'relu'),
+        tfk.layers.Dense(16, 'relu'),
+        tfk.layers.Dense(1, 'linear'),
     ])
 
-    inputs = tf.keras.Input(shape=(64,))
+    inputs = tfk.Input(shape=(64,))
     dc_cl = dc_predictor(inputs[..., 0])
     ac_cl = ac_predictor(inputs[..., 1:])
     outputs = dc_cl + ac_cl
 
-    model = tf.keras.Model(inputs=inputs, outputs=outputs)
-    model.compile(tf.keras.optimizers.SGD(lr, 0.9, True),
-                  tf.keras.losses.Huber(),
-                  [tf.keras.metrics.MeanAbsoluteError(),
-                   tf.keras.metrics.MeanAbsolutePercentageError()])
+    model = tfk.Model(inputs=inputs, outputs=outputs)
+    model.compile(tfk.optimizers.SGD(lr, 0.9, True),
+                  tfk.losses.Huber(),
+                  [tfk.metrics.MeanAbsoluteError(),
+                   tfk.metrics.MeanAbsolutePercentageError()])
     return model
 
 
