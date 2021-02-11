@@ -4,6 +4,7 @@ import numpy as np
 import simplejpeg as sjpeg
 
 from jpeg_utils import *
+from huffman import *
 
 IMAGE_SIZE = 224
 CROP_PADDING = 32

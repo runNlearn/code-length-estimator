@@ -29,7 +29,7 @@ def np_delta_encode(coefs):
 
 
 def np_raster_scan(coefs):
-    return coefs[..., to_zigzag_index]
+    return coefs[..., _to_zigzag_index]
 
 
 def run_length_encode(ac_coef):
