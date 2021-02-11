@@ -9,13 +9,16 @@ from absl import logging
 
 from preprocess import *
 
-FLAGS = flags.FLAGS
-flags.DEFINE_float('lr', 1e-4, 'Learning rate')
-flags.DEFINE_integer('bs', 64, 'Batch size')
-flags.DEFINE_string('data_dir', 'gs://iris-us/tfds_datasets', 'Path for tfds dataset')
-flags.DEFINE_string('dataset', 'imagenet2012', 'Name of dataset')
-flags.DEFINE_boolean('round', False, 'Round after scale to log2 regime')
-flags.DEFINE_boolean('save', False, 'Saving option')
+
+def define_flags():
+    global FLAGS 
+    FLAGS = flags.FLAGS
+    flags.DEFINE_float('lr', 1e-4, 'Learning rate')
+    flags.DEFINE_integer('bs', 64, 'Batch size')
+    flags.DEFINE_string('data_dir', 'gs://iris-us/tfds_datasets', 'Path for tfds dataset')
+    flags.DEFINE_string('dataset', 'imagenet2012', 'Name of dataset')
+    flags.DEFINE_boolean('round', False, 'Round after scale to log2 regime')
+    flags.DEFINE_boolean('save', False, 'Saving option')
 
 
 def main(argv):
@@ -132,4 +135,5 @@ def build_model(lr):
 
 
 if __name__ == '__main__':
+    define_flags()
     app.run(main)
