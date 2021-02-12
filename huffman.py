@@ -1,8 +1,5 @@
 import yaml
 
-from PIL import Image
-
-
 __all__ = [
     'Y_DC_HUFF_TBL',
     'Y_AC_HUFF_TBL',
