@@ -10,6 +10,7 @@ from model import build_model
 
 __all__ = ['run']
 
+import logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logging.basicConfig(
@@ -117,5 +118,3 @@ if __name__ == '__main__':
     flags.DEFINE_boolean('save', False, 'Saving option')
 
     app.run(main)
-else:
-    import logging
