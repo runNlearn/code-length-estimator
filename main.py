@@ -1,3 +1,11 @@
+import logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logging.basicConfig(
+        format='%(asctime)s %(levelname)-8s %(message)s',
+        level=logging.INFO,
+        datefmt='%Y-%m-%d %H:%M:%S')
+
 import os
 import functools
 
@@ -10,13 +18,6 @@ from model import build_model
 
 __all__ = ['run']
 
-import logging
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-logging.basicConfig(
-        format='%(asctime)s %(levelname)-8s %(message)s',
-        level=logging.INFO,
-        datefmt='%Y-%m-%d %H:%M:%S')
 
 def main(argv):
     del argv
