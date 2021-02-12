@@ -20,6 +20,9 @@ __all__ = ['run']
 def main(argv):
     del argv
 
+    if not FLAGS.gpu:
+        os.environ['CUDA_VISIBLE_DEVICES']='-1'
+
     config = get_config() 
     
     for key in config.keys:
@@ -117,5 +120,6 @@ if __name__ == '__main__':
     flags.DEFINE_string('dataset', None, 'Name of dataset')
     flags.DEFINE_boolean('round', None, 'Round after scale to log2 regime')
     flags.DEFINE_boolean('save', None, 'Saving option')
+    flags.DEFINE_boolean('gpu', False, 'Use GPU')
 
     app.run(main)
