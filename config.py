@@ -37,5 +37,5 @@ class Config(object):
     @staticmethod
     def from_yaml(path):
         with open(path, 'r') as f:
-            config_dict = yaml.load(f)
+            config_dict = yaml.load(f, Loader=yaml.FullLoader)
         return Config(config_dict)
