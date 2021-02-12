@@ -9,6 +9,6 @@ cd jpeg2dct && python3 setup.py install
 cd ..
 rm -rf jpeg2dct
 
-echo Install simplejpeg
-pip install simplejpeg &> /dev/null
+echo 'Install simplejpeg & pyyaml==3.13'
+pip install simplejpeg pyyaml=&> /dev/null
 
