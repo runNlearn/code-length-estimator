@@ -22,7 +22,7 @@ def main(argv):
 
     config = get_config() 
     
-    for key in config.keys():
+    for key in config.keys:
         value = getattr(FLAGS, key)
         if value is not None:
             setattr(config, key, value)
