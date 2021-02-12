@@ -115,6 +115,8 @@ if __name__ == '__main__':
 
 else:
     import logging
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
     logging.basicConfig(
             format='%(asctime)s %(levelname)-8s %(message)s',
             level=logging.INFO,
