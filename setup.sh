@@ -10,5 +10,5 @@ cd ..
 rm -rf jpeg2dct
 
 echo 'Install simplejpeg & pyyaml==3.13'
-pip install simplejpeg pyyaml=&> /dev/null
+pip3 install simplejpeg pyyaml==3.13 
 
