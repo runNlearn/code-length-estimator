@@ -1,5 +1,5 @@
 bs: 64
-data_dir: gs://iris-us/jsm/tfds_datasets
+data_dir: gs://iris-us/tfds_datasets
 dataset: imagenet2012
 lr: 0.0001
 round: false

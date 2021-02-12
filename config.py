@@ -8,7 +8,7 @@ def get_config(path=None):
            if path is None or '', default config will be returned.
 
     """
-    filename = 'default_config.yaml' if not filename else filename
+    path = 'default_config.yaml' if not path else path
     with open(path, 'r') as f:
         config = yaml.load(f)
     return config
