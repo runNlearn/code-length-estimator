@@ -23,7 +23,9 @@ def main(argv):
     config = get_config() 
     
     for key in config.keys():
-        setattr(config, key, getattr(FLAGS, key))
+        value = getattr(FLAGS, key)
+        if value is not None:
+            setattr(config, key, value)
 
     run(config)
 
@@ -109,11 +111,11 @@ if __name__ == '__main__':
     from absl import flags
 
     FLAGS = flags.FLAGS
-    flags.DEFINE_float('learning_rate', 1e-4, 'Learning rate')
-    flags.DEFINE_integer('batch_size', 64, 'Batch size')
-    flags.DEFINE_string('data_dir', 'gs://iris-us/tfds_datasets', 'Path for tfds dataset')
-    flags.DEFINE_string('dataset', 'imagenet2012', 'Name of dataset')
-    flags.DEFINE_boolean('round', False, 'Round after scale to log2 regime')
-    flags.DEFINE_boolean('save', False, 'Saving option')
+    flags.DEFINE_float('learning_rate', None, 'Learning rate')
+    flags.DEFINE_integer('batch_size', None, 'Batch size')
+    flags.DEFINE_string('data_dir', None, 'Path for tfds dataset')
+    flags.DEFINE_string('dataset', None, 'Name of dataset')
+    flags.DEFINE_boolean('round', None, 'Round after scale to log2 regime')
+    flags.DEFINE_boolean('save', None, 'Saving option')
 
     app.run(main)
