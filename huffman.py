@@ -1,6 +1,6 @@
-from PIL import Image
+import yaml
 
-import jpegio
+from PIL import Image
 
 
 __all__ = [
@@ -10,12 +10,6 @@ __all__ = [
     'C_AC_HUFF_TBL',
 ]
 
-dummy_img = Image.new('RGB', (32, 32), color='orange')
-dummy_img.save('dummy.jpg', subsampling=False, quality=1)
-dummy_jobj = jpegio.read('dummy.jpg')
-
-y_dc, c_dc = dummy_jobj.dc_huff_tables
-y_ac, c_ac = dummy_jobj.ac_huff_tables
 
 def expand_huffman_tbl(counts, symbols, encoding=True, hex=False):
     huff_tbl = dict()
@@ -35,7 +29,11 @@ def expand_huffman_tbl(counts, symbols, encoding=True, hex=False):
         huff_tbl = {value: key for key, value in huff_tbl.items()}
     return huff_tbl
 
-Y_DC_HUFF_TBL = expand_huffman_tbl(**y_dc)
-Y_AC_HUFF_TBL = expand_huffman_tbl(**y_ac)
-C_DC_HUFF_TBL = expand_huffman_tbl(**c_dc)
-C_AC_HUFF_TBL = expand_huffman_tbl(**c_ac)
+
+with open('huffman_table.yaml', 'r') as f:
+    _tables = yaml.load(f, Loader=yaml.FullLoader)
+
+Y_DC_HUFF_TBL = expand_huffman_tbl(**_tables['ydc'])
+Y_AC_HUFF_TBL = expand_huffman_tbl(**_tables['yac'])
+C_DC_HUFF_TBL = expand_huffman_tbl(**_tables['cdc'])
+C_AC_HUFF_TBL = expand_huffman_tbl(**_tables['cac'])
