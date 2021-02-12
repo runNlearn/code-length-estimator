@@ -1,5 +1,5 @@
 import os
-import logging
+#import logging
 import functools
 
 from collections import namedtuple
@@ -11,12 +11,12 @@ from model import build_model
 
 __all__ = ['run']
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-logging.basicConfig(
-        format='%(asctime)s %(levelname)-8s %(message)s',
-        level=logging.INFO,
-        datefmt='%Y-%m-%d %H:%M:%S')
+#logger = logging.getLogger()
+#logger.setLevel(logging.INFO)
+#logging.basicConfig(
+#        format='%(asctime)s %(levelname)-8s %(message)s',
+#        level=logging.INFO,
+#        datefmt='%Y-%m-%d %H:%M:%S')
 
 def main(argv):
     del argv
@@ -118,3 +118,5 @@ if __name__ == '__main__':
     flags.DEFINE_boolean('save', False, 'Saving option')
 
     app.run(main)
+else:
+    import logging
