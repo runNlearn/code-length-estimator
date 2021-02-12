@@ -11,7 +11,7 @@ def get_config(path=None):
            if path is None or '', default config will be returned.
 
     """
-    path = 'default_config.yaml' if not path else path
+    path = 'config.yaml' if not path else path
     config = Config.from_yaml(path)
     return config
 
