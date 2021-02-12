@@ -10,5 +10,5 @@ cd ..
 rm -rf jpeg2dct
 
 echo 'Install simplejpeg & pyyaml==3.13'
-pip3 install simplejpeg pyyaml==3.13 
+pip3 install simplejpeg PyYAML==5.3.1 
 

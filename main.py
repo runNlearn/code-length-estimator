@@ -1,3 +1,5 @@
+import os
+import functools
 import logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -6,14 +8,10 @@ logging.basicConfig(
         level=logging.INFO,
         datefmt='%Y-%m-%d %H:%M:%S')
 
-import os
-import functools
-
-from collections import namedtuple
-
 import tensorflow_datasets as tfds
 
 from preprocess import *
+from config import *
 from model import build_model
 
 __all__ = ['run']
@@ -22,21 +20,20 @@ __all__ = ['run']
 def main(argv):
     del argv
 
-    run(lr=FLAGS.lr,
-        bs=FLAGS.bs,
-        data_dir=FLAGS.data_dir,
-        dataset=FLAGS.dataset,
-        round=FLAGS.round,
-        save=FLAGS.save)
+    config = get_config() 
+    
+    for key in config.keys():
+        setattr(config, key, getattr(FLAGS, key))
+
+    run(config)
 
 
-
-def run(**kwargs):
-    Config = namedtuple('Config', ' '.join(kwargs.keys()))
-    config = Config(**kwargs)
+def run(config):
 
     saving_path_template = ('gs://iris-us/jsm/research/code-length-estimator/'
-                            '{}-bs{}-lr{}').format(config.dataset, config.bs, config.lr) 
+                            '{}-bs{}-lr{}').format(config.dataset,
+                                                   config.batch_size,
+                                                   config.learning_rate) 
     saving_path_template = saving_path_template + '-round' if config.round else saving_path_template
     saving_path_template = saving_path_template + '-steps{:08d}'
 
@@ -53,10 +50,10 @@ def run(**kwargs):
                          decoders={'image': tfds.decode.SkipDecoding()},
                          split='validation')
     
-    train_ds = train_ds.map(lambda x, _: tf_process(x), -1).repeat().batch(config.bs).prefetch(-1)
-    valid_ds = valid_ds.map(lambda x, _: tf_process(x), -1).repeat().batch(config.bs).prefetch(-1)
+    train_ds = train_ds.map(lambda x, _: tf_process(x), -1).repeat().batch(config.batch_size).prefetch(-1)
+    valid_ds = valid_ds.map(lambda x, _: tf_process(x), -1).repeat().batch(config.batch_size).prefetch(-1)
 
-    model = build_model(config.lr)
+    model = build_model(config.learning_rate)
 
     np_train_iter = train_ds.as_numpy_iterator()
     np_valid_iter = valid_ds.as_numpy_iterator()
@@ -112,8 +109,8 @@ if __name__ == '__main__':
     from absl import flags
 
     FLAGS = flags.FLAGS
-    flags.DEFINE_float('lr', 1e-4, 'Learning rate')
-    flags.DEFINE_integer('bs', 64, 'Batch size')
+    flags.DEFINE_float('learning_rate', 1e-4, 'Learning rate')
+    flags.DEFINE_integer('batch_size', 64, 'Batch size')
     flags.DEFINE_string('data_dir', 'gs://iris-us/tfds_datasets', 'Path for tfds dataset')
     flags.DEFINE_string('dataset', 'imagenet2012', 'Name of dataset')
     flags.DEFINE_boolean('round', False, 'Round after scale to log2 regime')

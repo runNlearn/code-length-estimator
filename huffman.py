@@ -28,7 +28,7 @@ def expand_huffman_tbl(counts, symbols, encoding=True, hex=False):
 
 
 with open('huffman_table.yaml', 'r') as f:
-    _tables = yaml.load(f)
+    _tables = yaml.load(f, Loader=yaml.FullLoader)
 
 Y_DC_HUFF_TBL = expand_huffman_tbl(**_tables['ydc'])
 Y_AC_HUFF_TBL = expand_huffman_tbl(**_tables['yac'])
