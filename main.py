@@ -7,7 +7,6 @@ from collections import namedtuple
 import tensorflow_datasets as tfds
 
 from preprocess import *
-from model import build_model
 
 __all__ = ['run']
 
@@ -19,9 +18,13 @@ __all__ = ['run']
 #        datefmt='%Y-%m-%d %H:%M:%S')
 
 def main(argv):
+    from model import build_model
+
     del argv
 
-    run(lr=FLAGS.lr,
+    model = build_model()
+    run(model,
+        lr=FLAGS.lr,
         bs=FLAGS.bs,
         data_dir=FLAGS.data_dir,
         dataset=FLAGS.dataset,
@@ -30,7 +33,7 @@ def main(argv):
 
 
 
-def run(**kwargs):
+def run(model, **kwargs):
     Config = namedtuple('Config', ' '.join(kwargs.keys()))
     config = Config(**kwargs)
 
