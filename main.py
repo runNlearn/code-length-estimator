@@ -1,4 +1,5 @@
 import os
+import logging
 import functools
 
 from collections import namedtuple
@@ -10,6 +11,11 @@ from model import build_model
 
 __all__ = ['run']
 
+
+logging.basicConfig(
+        format='%(asctime)s %(levelname)-8s %(message)s',
+        level=logging.INFO,
+        datefmt='%Y-%m-%d %H:%M:%S')
 
 def main(argv):
     del argv
@@ -101,7 +107,6 @@ def run(**kwargs):
 if __name__ == '__main__':
     from absl import app
     from absl import flags
-    from absl import logging
 
     FLAGS = flags.FLAGS
     flags.DEFINE_float('lr', 1e-4, 'Learning rate')
@@ -112,12 +117,3 @@ if __name__ == '__main__':
     flags.DEFINE_boolean('save', False, 'Saving option')
 
     app.run(main)
-
-else:
-    import logging
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-    logging.basicConfig(
-            format='%(asctime)s %(levelname)-8s %(message)s',
-            level=logging.INFO,
-            datefmt='%Y-%m-%d %H:%M:%S')
