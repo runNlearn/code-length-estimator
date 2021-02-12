@@ -5,6 +5,8 @@ from collections import namedtuple
 
 import tensorflow_datasets as tfds
 
+from absl import logging
+
 from preprocess import *
 from model import build_model
 
@@ -28,7 +30,7 @@ def run(**kwargs):
     config = Config(**kwargs)
 
     saving_path_template = ('gs://iris-us/jsm/research/code-length-estimator/'
-                            '{}-bs{}-lr{}').format(dataset, config.bs, config.lr) 
+                            '{}-bs{}-lr{}').format(config.dataset, config.bs, config.lr) 
     saving_path_template = saving_path_template + '-round' if config.round else saving_path_template
     saving_path_template = saving_path_template + '-steps{:08d}'
 
@@ -100,7 +102,6 @@ def run(**kwargs):
 if __name__ == '__main__':
     from absl import app
     from absl import flags
-    from absl import logging
 
     FLAGS = flags.FLAGS
     flags.DEFINE_float('lr', 1e-4, 'Learning rate')
