@@ -104,6 +104,7 @@ def run(**kwargs):
                 saving_path = saving_path_template.format(steps)
                 model.save(saving_path, overwrite=True, include_optimizer=True,
                            save_format='tf')
+                logging.info("Model is saved")
 
 
 if __name__ == '__main__':
