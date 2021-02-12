@@ -5,8 +5,6 @@ from collections import namedtuple
 
 import tensorflow_datasets as tfds
 
-from absl import logging
-
 from preprocess import *
 from model import build_model
 
@@ -102,6 +100,7 @@ def run(**kwargs):
 if __name__ == '__main__':
     from absl import app
     from absl import flags
+    from absl import logging
 
     FLAGS = flags.FLAGS
     flags.DEFINE_float('lr', 1e-4, 'Learning rate')
@@ -114,4 +113,8 @@ if __name__ == '__main__':
     app.run(main)
 
 else:
-    logging.set_verbosity(logging.INFO)
+    import logging
+    logging.basicConfig(
+            format='%(asctime)s %(levelname)-8s %(message)s',
+            level=logging.INFO,
+            datefmt='%Y-%m-%d %H:%M:%S')
