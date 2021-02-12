@@ -38,4 +38,4 @@ class Config(object):
     def from_yaml(path):
         with open(path, 'r') as f:
             config_dict = yaml.load(f)
-        return self(config_dict)
+        return Config(config_dict)
