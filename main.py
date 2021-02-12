@@ -56,6 +56,7 @@ def run(**kwargs):
     
     steps = 0
 
+    logging.info("Training Start")
     while True:
         steps += 1
         train_data = next(np_train_iter) 
