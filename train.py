@@ -35,10 +35,12 @@ def main(argv):
 
 def train(config):
 
-    saving_path_template = ('gs://iris-us/jsm/research/code-length-estimator/'
-                            '{}-bs{}-lr{}').format(config.dataset,
-                                                   config.batch_size,
-                                                   config.learning_rate)
+    saving_path_template = '{}-bs{}-lr{}'.format(
+                                config.dataset,
+                                config.batch_size,
+                                config.learning_rate)
+    saving_path_template = os.path.join(config.base_saving_path,
+                                        saving_path_template)
     saving_path_template = (saving_path_template + '-round' if config.round
                                 else saving_path_template)
     saving_path_template = saving_path_template + '-steps{:08d}'
@@ -123,6 +125,7 @@ if __name__ == '__main__':
     flags.DEFINE_integer('batch_size', None, 'Batch size')
     flags.DEFINE_string('data_dir', None, 'Path for tfds dataset')
     flags.DEFINE_string('dataset', None, 'Name of dataset')
+    flags.DEFINE_string('base_saving_path', None, 'Base saving path')
     flags.DEFINE_boolean('round', None, 'Round after scale to log2 regime')
     flags.DEFINE_boolean('save', None, 'Saving option')
     flags.DEFINE_boolean('gpu', False, 'Use GPU')
