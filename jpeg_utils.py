@@ -47,24 +47,24 @@ def run_length_encode(ac_coef):
     return result
 
 
-def get_dc_code_length(dc_value, encode_huff_tbl):
+def get_dc_bit_length(dc_value, encode_huff_tbl):
     required_length = 0 if dc_value == 0 else int(math.log2(abs(dc_value))) + 1
     return required_length + len(encode_huff_tbl[required_length])
 
 
-def get_ac_code_length(ac_symbol, encode_huff_tbl):
+def get_ac_bit_length(ac_symbol, encode_huff_tbl):
     num_zeros, value = ac_symbol
     required_length = 0 if value == 0 else int(math.log2(abs(value))) + 1
     return (len(encode_huff_tbl[16 * num_zeros + required_length])
             + required_length)
 
 
-def get_block_code_length(block, dc_huff_tbl, ac_huff_tbl):
-    code_length = get_dc_code_length(block[0], dc_huff_tbl)
+def get_block_bit_length(block, dc_huff_tbl, ac_huff_tbl):
+    bit_length = get_dc_bit_length(block[0], dc_huff_tbl)
     ac_symbols = run_length_encode(block[1:])
-    code_length += sum(get_ac_code_length(symbol, ac_huff_tbl) for symbol
+    bit_length += sum(get_ac_bit_length(symbol, ac_huff_tbl) for symbol
                        in ac_symbols) 
-    return code_length
+    return bit_length
 
 
 def get_image_code_length(coefs):

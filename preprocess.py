@@ -66,5 +66,5 @@ def np_test_process(img, round):
     code_length = get_image_code_length(coef)
     blocks = coef.reshape([-1, 64])
     blocks = log_scale(blocks, round)
-    code_length_with_header = len(jpeg) * 8
+    code_length_with_header = len(jpeg)
     return blocks, code_length, code_length_with_header
