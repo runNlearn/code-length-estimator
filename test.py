@@ -11,8 +11,11 @@ from absl import flags
 from preprocess import *
 
 
-def percentage_error(r, p):
+def absolute_percentage_error(r, p):
     return (abs(r - p) / r) * 100
+
+def symmetric_absolute_percentage_error(r, p):
+    return (abs(r - p) / ((r + p) / 2)) * 100
 
 def test(argv):
     del argv
@@ -29,11 +32,12 @@ def test(argv):
                       .prefetch(-1))
     np_test_iter = test_ds.as_numpy_iterator()
 
-    cls, preds, pes = [], [], []
+    cls, preds, apes, sapes = [], [], [], []
     for test_data in np_test_iter:
         blks, cl, clwh = np_test_process(test_data, False)
         pred = np.sum(model(blks, training=False).numpy()) // 8
-        pe = percentage_error(cl, pred)
+        ape = absolute_percentage_error(cl, pred)
+        sape = symmetric_absolute_percentage_error(cl, pred)
         print(('Real Code Length:             {}\n'
                'Real Code Length with Header: {}\n'
                'Predicted Code Length:        {:.0f}\n'
@@ -41,18 +45,20 @@ def test(argv):
                .format(cl, clwh, pred, pe)))
         cls.append(cl)
         preds.append(pred)
-        pes.append(pe)
+        apes.append(ape)
+        sapes.append(sape)
     
     fontdict = {'size': 16}
     plt.figure(figsize=(10, 10))
-    plt.scatter(gts, preds, alpha=0.6, color='orange')
+    plt.scatter(cls, preds, alpha=0.6, color='orange')
     plt.grid(True)
     plt.xlabel('Real Code Length', fontdict=fontdict)
     plt.ylabel('Predicted Code Length', fontdict=fontdict)
     plt.savefig('result.png', dpi=300)
 #    plt.show()
 
-    print('MAPE: {.2f}'.format(sum(pes) / len(pes)))
+    print('MAPE:  {.2f}'.format(sum(apes) / len(apes)))
+    print('SMAPE: {.2f}'.format(sum(sapes) / len(sapes)))
  
     
 
