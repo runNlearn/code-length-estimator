@@ -25,7 +25,7 @@ def test(argv):
 
     for test_data in np_test_iter:
         blks, cl, clwh = np_test_process(test_data, False)
-        pred = np.sum(model(blks, training=False).numpy())
+        pred = np.sum(model(blks, training=False).numpy()) // 8
         print(('Real Code Length: {}\n'
                'Real Code Length with Header: {}\n'
                'Predicted Code Length: {:.0f}\n'
