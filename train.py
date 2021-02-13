@@ -39,7 +39,8 @@ def train(config):
                             '{}-bs{}-lr{}').format(config.dataset,
                                                    config.batch_size,
                                                    config.learning_rate) 
-    saving_path_template = saving_path_template + '-round' if config.round else saving_path_template
+    saving_path_template = saving_path_template + '-round' if config.round
+                                else saving_path_template
     saving_path_template = saving_path_template + '-steps{:08d}'
 
 
@@ -55,8 +56,12 @@ def train(config):
                          decoders={'image': tfds.decode.SkipDecoding()},
                          split='validation')
     
-    train_ds = train_ds.map(lambda x, _: tf_process(x), -1).repeat().batch(config.batch_size).prefetch(-1)
-    valid_ds = valid_ds.map(lambda x, _: tf_process(x), -1).repeat().batch(config.batch_size).prefetch(-1)
+    train_ds = (train_ds.map(lambda x, _: tf_process(x), -1)
+                        .repeat().batch(config.batch_size)
+                        .prefetch(-1))
+    valid_ds = (valid_ds.map(lambda x, _: tf_process(x), -1)
+                        .repeat().batch(config.batch_size)
+                        .prefetch(-1))
 
     model = build_model(config.learning_rate)
 
