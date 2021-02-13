@@ -53,11 +53,10 @@ def np_process(img, round):
     jpeg = sjpeg.encode_jpeg(img, qf, 'RGB', '444', False)
     block = np_extract_coef_block(jpeg)
     block = np_raster_scan(block)
-    code_length = get_bit_code_length(block, Y_DC_HUFF_TBL, Y_AC_HUFF_TBL)
+    bit_length = get_block_bit_length(block, Y_DC_HUFF_TBL, Y_AC_HUFF_TBL)
     block = block.astype('float32')
     block = log_scale(block, round)
-    code_length = code_length
-    return block, code_length
+    return block, bit_length
 
 def np_test_process(img, round):
     qf = np.random.randint(50, 100)
