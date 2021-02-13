@@ -1,11 +1,3 @@
-import logging
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-logging.basicConfig(
-    format='%(asctime)s.%(msecs)04d [%(levelname).1s] %(message)s',
-    level=logging.INFO,
-    datefmt='%Y-%m-%d %H:%M:%S')
-
 import functools
 
 import tensorflow.keras as tfk
@@ -34,10 +26,10 @@ def test(argv):
     for test_data in np_test_iter:
         blks, cl, clwh = np_test_process(test_data, False)
         pred = np.sum(model(blks, training=False).numpy())
-        logging.info(('Real Code Length: {}\n'
-                      'Real Code Length with Header: {}\n'
-                      'Predicted Code Length: {}\n'
-                      .format(pred, cl, clwh)))
+        print(('Real Code Length: {}\n'
+               'Real Code Length with Header: {}\n'
+               'Predicted Code Length: {:.0f}\n'
+               .format(cl, clwh, pred)))
 
 
 if __name__ == '__main__':
