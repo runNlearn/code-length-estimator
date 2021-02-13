@@ -39,8 +39,8 @@ def train(config):
                             '{}-bs{}-lr{}').format(config.dataset,
                                                    config.batch_size,
                                                    config.learning_rate))
-    saving_path_template = saving_path_template + '-round' if config.round
-                                else saving_path_template
+    saving_path_template = (saving_path_template + '-round' if config.round
+                                else saving_path_template)
     saving_path_template = saving_path_template + '-steps{:08d}'
 
 
