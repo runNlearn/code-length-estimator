@@ -2,6 +2,7 @@ import math
 import functools
 
 import numpy as np
+from huffman import *
 from jpeg2dct.numpy import loads
 
 
@@ -54,34 +55,42 @@ def get_dc_code_length(dc_value, encode_huff_tbl):
 def get_ac_code_length(ac_symbol, encode_huff_tbl):
     num_zeros, value = ac_symbol
     required_length = 0 if value == 0 else int(math.log2(abs(value))) + 1
-    return len(encode_huff_tbl[16 * num_zeros + required_length]) + required_length
+    return (len(encode_huff_tbl[16 * num_zeros + required_length])
+            + required_length)
 
 
 def get_block_code_length(block, dc_huff_tbl, ac_huff_tbl):
     code_length = get_dc_code_length(block[0], dc_huff_tbl)
     ac_symbols = run_length_encode(block[1:])
     code_length += sum(get_ac_code_length(symbol, ac_huff_tbl) for symbol
-                       in ac_symbols)
+                       in ac_symbols) 
     return code_length
 
 
 def get_image_code_length(coefs):
+    func_y = functools.partial(get_block_code_length,
+                               dc_huff_tbl=Y_DC_HUFF_TBL,
+                               ac_huff_tbl=Y_AC_HUFF_TBL)
+    func_c = functools.partial(get_block_code_length,
+                               dc_huff_tbl=C_DC_HUFF_TBL,
+                               ac_huff_tbl=C_AC_HUFF_TBL)
+        
     coefs = coefs.reshape([3, -1, 64])
     np_delta_encode(coefs)
     coefs = np_raster_scan(coefs)
-    func = functools.partial(get_block_code_length,
-                             dc_huff_tbl=Y_DC_HUFF_TBL,
-                             ac_huff_tbl=Y_AC_HUFF_TBL)
-    y = sum(map(func, coefs[0]))
-    cb = sum(map(func, coefs[1]))
-    cr = sum(map(func, coefs[2]))
-    return y + cb + cr
+
+    y = sum(map(func_y, coefs[0]))
+    cb = sum(map(func_c, coefs[1]))
+    cr = sum(map(func_c, coefs[2]))
+
+    return math.ceil((y + cb + cr) / 8)
 
 
 def tf_delta_encode(coefs):
     ac = coefs[..., 1:]
     dc = coefs[..., 0:1]
-    dc = tf.concat([dc[..., 0:1, :], dc[..., 1:, :] - dc[..., :-1, :]], axis=-2)
+    dc = tf.concat([dc[..., 0:1, :],
+                    dc[..., 1:, :] - dc[..., :-1, :]], axis=-2)
     return tf.concat([dc, ac], axis=-1)
 
 
