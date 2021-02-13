@@ -55,10 +55,9 @@ def test(argv):
     plt.xlabel('Real Code Length', fontdict=fontdict)
     plt.ylabel('Predicted Code Length', fontdict=fontdict)
     plt.savefig('result.png', dpi=300)
-#    plt.show()
 
-    print('MAPE:  {.2f}'.format(sum(apes) / len(apes)))
-    print('SMAPE: {.2f}'.format(sum(sapes) / len(sapes)))
+    print('MAPE:  {:.2f}'.format(sum(apes) / len(apes)))
+    print('SMAPE: {:.2f}'.format(sum(sapes) / len(sapes)))
  
     
 
