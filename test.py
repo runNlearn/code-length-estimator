@@ -42,7 +42,7 @@ def test(argv):
                'Real Code Length with Header: {}\n'
                'Predicted Code Length:        {:.0f}\n'
                'Absolute Percentage Error: {}\n'
-               .format(cl, clwh, pred, pe)))
+               .format(cl, clwh, pred, ape)))
         cls.append(cl)
         preds.append(pred)
         apes.append(ape)
