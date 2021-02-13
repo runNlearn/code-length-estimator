@@ -38,7 +38,7 @@ def train(config):
     saving_path_template = ('gs://iris-us/jsm/research/code-length-estimator/'
                             '{}-bs{}-lr{}').format(config.dataset,
                                                    config.batch_size,
-                                                   config.learning_rate) 
+                                                   config.learning_rate))
     saving_path_template = saving_path_template + '-round' if config.round
                                 else saving_path_template
     saving_path_template = saving_path_template + '-steps{:08d}'
