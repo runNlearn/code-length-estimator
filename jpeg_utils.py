@@ -68,10 +68,10 @@ def get_block_bit_length(block, dc_huff_tbl, ac_huff_tbl):
 
 
 def get_image_code_length(coefs):
-    func_y = functools.partial(get_block_code_length,
+    func_y = functools.partial(get_block_bit_length,
                                dc_huff_tbl=Y_DC_HUFF_TBL,
                                ac_huff_tbl=Y_AC_HUFF_TBL)
-    func_c = functools.partial(get_block_code_length,
+    func_c = functools.partial(get_block_bit_length,
                                dc_huff_tbl=C_DC_HUFF_TBL,
                                ac_huff_tbl=C_AC_HUFF_TBL)
         
