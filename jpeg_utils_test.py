@@ -2,7 +2,7 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logging.basicConfig(
-    format='%(asctime)s.%(msecs)04d %(levelname).1s %(message)s',
+    format='%(asctime)s.%(msecs)04d [%(levelname).1s] %(message)s',
     level=logging.INFO,
     datefmt='%Y-%m-%d %H:%M:%S')
 
