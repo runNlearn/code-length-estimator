@@ -35,7 +35,10 @@ def test(argv):
     cls, preds, apes, sapes = [], [], [], []
     for test_data in np_test_iter:
         blks, cl, clwh = np_test_process(test_data, False)
-        pred = np.sum(model(blks, training=False).numpy()) // 8
+        pred = model(blks, training=False).numpy()
+        if FLAGS.floor:
+            pred = np.floor(pred)
+        pred = np.sum(pred) // 8
         ape = absolute_percentage_error(cl, pred)
         sape = symmetric_absolute_percentage_error(cl, pred)
         if FLAGS.verbose:
@@ -70,4 +73,5 @@ if __name__ == '__main__':
     flags.DEFINE_string('saving_path', None, 'Path of saved model')
     flags.DEFINE_string('verbose', False, 'Verbosity')
     flags.DEFINE_boolean('num', 1000, 'Number of test data')
+    flags.DEFINE_boolean('floor', True, 'Floor the ouput of model')
     app.run(test)
