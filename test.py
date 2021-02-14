@@ -38,11 +38,12 @@ def test(argv):
         pred = np.sum(model(blks, training=False).numpy()) // 8
         ape = absolute_percentage_error(cl, pred)
         sape = symmetric_absolute_percentage_error(cl, pred)
-        print(('Real Code Length:             {}\n'
-               'Real Code Length with Header: {}\n'
-               'Predicted Code Length:        {:.0f}\n'
-               'Absolute Percentage Error: {}\n'
-               .format(cl, clwh, pred, ape)))
+        if FLAGS.verbose:
+            print(('Real Code Length:             {}\n'
+                   'Real Code Length with Header: {}\n'
+                   'Predicted Code Length:        {:.0f}\n'
+                   'Absolute Percentage Error:    {:.4f}\n'
+                   .format(cl, clwh, pred, ape)))
         cls.append(cl)
         preds.append(pred)
         apes.append(ape)
@@ -67,5 +68,6 @@ if __name__ == '__main__':
     flags.DEFINE_string('data_dir', 'gs://iris-us/tfds_datasets',
                         'Path of tfds')
     flags.DEFINE_string('saving_path', None, 'Path of saved model')
+    flags.DEFINE_string('verbose', False, 'Verbosity')
     flags.DEFINE_integer('num', 1000, 'Number of test data')
     app.run(test)
