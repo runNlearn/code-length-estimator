@@ -69,5 +69,5 @@ if __name__ == '__main__':
                         'Path of tfds')
     flags.DEFINE_string('saving_path', None, 'Path of saved model')
     flags.DEFINE_string('verbose', False, 'Verbosity')
-    flags.DEFINE_integer('num', 1000, 'Number of test data')
+    flags.DEFINE_boolean('num', 1000, 'Number of test data')
     app.run(test)
