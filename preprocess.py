@@ -65,7 +65,7 @@ def np_process(img, round, qf):
     block = log_scale(block, round)
     return block, bit_length
 
-def np_test_process(img, round, qf):
+def np_test_process(img, round, qf='50,100'):
     lqf, hqf = (int(v) for v in qf.split(','))
     qf = np.random.randint(lqf, hqf)
     jpeg = tjpeg.encode(img, quality=qf, pixel_format=TJPF_RGB,
