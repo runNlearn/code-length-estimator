@@ -70,7 +70,9 @@ def train(config):
 
     np_train_iter = train_ds.as_numpy_iterator()
     np_valid_iter = valid_ds.as_numpy_iterator()
-    preprocess = functools.partial(np_process, round=config.round)
+    preprocess = functools.partial(np_process,
+                                   round=config.round,
+                                   qf=config.qf)
     
     steps = 0
 
@@ -124,6 +126,7 @@ if __name__ == '__main__':
     FLAGS = flags.FLAGS
     flags.DEFINE_float('learning_rate', None, 'Learning rate')
     flags.DEFINE_integer('batch_size', None, 'Batch size')
+    flags.DEFINE_string('qf', None, 'Range of quality factor, comma-separated')
     flags.DEFINE_string('data_dir', None, 'Path for tfds dataset')
     flags.DEFINE_string('dataset', None, 'Name of dataset')
     flags.DEFINE_string('base_saving_path', None, 'Base saving path')

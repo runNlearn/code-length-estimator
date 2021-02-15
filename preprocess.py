@@ -53,8 +53,9 @@ def log_scale(value, round=True):
     value = np.round(value) if round else value
     return value
 
-def np_process(img, round):
-    qf = np.random.randint(50, 100)
+def np_process(img, round, qf):
+    lqf, hqf = (int(v) for v in qf.split(','))
+    qf = np.random.randint(lqf, hqf)
     jpeg = tjpeg.encode(img, quality=qf, pixel_format=TJPF_RGB,
                         jpeg_subsample=TJSAMP_444, flags=TJFLAG_ACCURATEDCT)
     block = np_extract_coef_block(jpeg)
@@ -64,8 +65,9 @@ def np_process(img, round):
     block = log_scale(block, round)
     return block, bit_length
 
-def np_test_process(img, round):
-    qf = np.random.randint(50, 100)
+def np_test_process(img, round, qf):
+    lqf, hqf = (int(v) for v in qf.split(','))
+    qf = np.random.randint(lqf, hqf)
     jpeg = tjpeg.encode(img, quality=qf, pixel_format=TJPF_RGB,
                         jpeg_subsample=TJSAMP_444, flags=TJFLAG_ACCURATEDCT)
     coef = jpeg_to_coef(jpeg)
