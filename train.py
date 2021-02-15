@@ -43,6 +43,7 @@ def train(config):
                                         saving_path_template)
     saving_path_template = (saving_path_template + '-round' if config.round
                                 else saving_path_template)
+    saving_path_template = saving_path_template + config.suffix
     saving_path_template = saving_path_template + '-steps{:08d}'
 
 
@@ -126,6 +127,7 @@ if __name__ == '__main__':
     flags.DEFINE_string('data_dir', None, 'Path for tfds dataset')
     flags.DEFINE_string('dataset', None, 'Name of dataset')
     flags.DEFINE_string('base_saving_path', None, 'Base saving path')
+    flags.DEFINE_string('suffix', '', 'Suffix to saving_path')
     flags.DEFINE_boolean('round', None, 'Round after scale to log2 regime')
     flags.DEFINE_boolean('save', None, 'Saving option')
     flags.DEFINE_boolean('gpu', False, 'Use GPU')
