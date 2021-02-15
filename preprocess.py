@@ -6,6 +6,7 @@ import numpy as np
 # import simplejpeg as sjpeg 
 
 from turbojpeg import TurboJPEG, TJPF_RGB, TJSAMP_444, TJFLAG_ACCURATEDCT
+tjpeg = TurboJPEG()
 from jpeg_utils import *
 from huffman import *
 
