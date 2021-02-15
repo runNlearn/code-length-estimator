@@ -5,5 +5,5 @@ learning_rate: 0.0001
 round: false
 save: false
 base_saving_path: gs://iris-us/jsm/research/code-length-estimator
-suffx: ''
+suffix: ''
 qf: '50,100'
