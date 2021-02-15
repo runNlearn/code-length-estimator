@@ -1,7 +1,11 @@
 import numpy as np
 
-import simplejpeg as sjpeg
+# Loss occur when iterating decode-encode sequence.
+# `encode_jpeg` is major problem. This function makes glitch on the image,
+# and make size of the image bigger and bigger.
+# import simplejpeg as sjpeg 
 
+from tensorflow.io import encode_jpeg
 from jpeg_utils import *
 from huffman import *
 
@@ -50,7 +54,7 @@ def log_scale(value, round=True):
 
 def np_process(img, round):
     qf = np.random.randint(50, 100)
-    jpeg = sjpeg.encode_jpeg(img, qf, 'RGB', '444', False)
+    jpeg = encode_jpeg(img, quality=qf, chroma_downsampling=False).numpy()
     block = np_extract_coef_block(jpeg)
     block = np_raster_scan(block)
     bit_length = get_block_bit_length(block, Y_DC_HUFF_TBL, Y_AC_HUFF_TBL)
@@ -60,7 +64,7 @@ def np_process(img, round):
 
 def np_test_process(img, round):
     qf = np.random.randint(50, 100)
-    jpeg = sjpeg.encode_jpeg(img, qf, 'RGB', '444', False)
+    jpeg = encode_jpeg(img, quality=qf, chroma_downsampling=False).numpy()
     coef = jpeg_to_coef(jpeg)
     code_length = get_image_code_length(coef)
     blocks = coef.reshape([-1, 64])
