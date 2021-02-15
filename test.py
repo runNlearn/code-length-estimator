@@ -64,14 +64,13 @@ def test(argv):
     print('SMAPE: {:.2f}'.format(sum(sapes) / len(sapes)))
  
     
-
 if __name__ == '__main__':
     FLAGS = flags.FLAGS
     flags.DEFINE_string('dataset', 'imagenet2012', 'Dataset')
     flags.DEFINE_string('data_dir', 'gs://iris-us/tfds_datasets',
                         'Path of tfds')
     flags.DEFINE_string('saving_path', None, 'Path of saved model')
-    flags.DEFINE_string('verbose', False, 'Verbosity')
-    flags.DEFINE_boolean('num', 1000, 'Number of test data')
+    flags.DEFINE_boolean('verbose', False, 'Verbosity')
     flags.DEFINE_boolean('floor', True, 'Floor the ouput of model')
+    flags.DEFINE_integer('num', 1000, 'Number of test data')
     app.run(test)
