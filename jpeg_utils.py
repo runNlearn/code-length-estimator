@@ -17,7 +17,7 @@ _zigzag_index = (
     35, 36, 48, 49, 57, 58, 62, 63,
 )
 
-_to_zigzag_index = np.argsort(_zigzag_index)
+TO_ZIGZAG_INDEX = np.argsort(_zigzag_index)
 
 
 def jpeg_to_coef(jpeg):
@@ -30,7 +30,7 @@ def np_delta_encode(coefs):
 
 
 def np_raster_scan(coefs):
-    return coefs[..., _to_zigzag_index]
+    return coefs[..., TO_ZIGZAG_INDEX]
 
 
 def run_length_encode(ac_coef):
@@ -84,24 +84,4 @@ def get_image_code_length(coefs):
     cr = sum(map(func_c, coefs[2]))
 
     return math.ceil((y + cb + cr) / 8)
-
-
-def tf_delta_encode(coefs):
-    ac = coefs[..., 1:]
-    dc = coefs[..., 0:1]
-    dc = tf.concat([dc[..., 0:1, :],
-                    dc[..., 1:, :] - dc[..., :-1, :]], axis=-2)
-    return tf.concat([dc, ac], axis=-1)
-
-
-def tf_raster_scan(coefs):
-    return tf.gather(coefs, to_zigzag_index, axis=-1, batch_dims=0)
-
-
-def tf_get_block_code_length(block):
-    func = functools.partial(get_block_code_length,
-                             dc_huff_tbl=Y_DC_HUFF_TBL,
-                             ac_huff_tbl=Y_AC_HUFF_TBL)
-    code_length = tf.numpy_function(func, [block], tf.int64)
-    return code_length
 
