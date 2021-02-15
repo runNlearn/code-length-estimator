@@ -43,7 +43,10 @@ def train(config):
                                         saving_path_template)
     saving_path_template = (saving_path_template + '-round' if config.round
                                 else saving_path_template)
-    saving_path_template = saving_path_template + config.suffix
+    saving_path_template = (saving_path_template + '-'
+                            + config.qf.replace(',', '_'))
+    saving_path_template = (saving_path_template + '-' + config.suffix
+                            if config.suffix else saving_path_template)
     saving_path_template = saving_path_template + '-steps{:08d}'
 
 
