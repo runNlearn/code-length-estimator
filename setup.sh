@@ -22,5 +22,6 @@ function install_jpeg2dct() {
 
 
 install_jpeg2dct
-echo "Install simplejpeg & pyyaml"
-pip3 install simplejpeg PyYAML==5.3.1
+echo "Install pyyaml"
+# pip3 install simplejpeg
+pip3 install PyYAML==5.3.1
