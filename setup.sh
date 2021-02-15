@@ -22,6 +22,7 @@ function install_jpeg2dct() {
 
 
 install_jpeg2dct
-echo "Install pyyaml"
-# pip3 install simplejpeg
+echo 'Install pyyaml'
 pip3 install PyYAML==5.3.1
+echo 'Install PyTurboJPEG'
+pip3 install -U git+git://github.com/lilohuang/PyTurboJPEG.git

@@ -5,7 +5,7 @@ import numpy as np
 # and make size of the image bigger and bigger.
 # import simplejpeg as sjpeg 
 
-from tensorflow.io import encode_jpeg
+from turbojpeg import TurboJPEG, TJPF_RGB, TJSAMP_444, TJFLAG_ACCURATEDCT
 from jpeg_utils import *
 from huffman import *
 
@@ -54,7 +54,8 @@ def log_scale(value, round=True):
 
 def np_process(img, round):
     qf = np.random.randint(50, 100)
-    jpeg = encode_jpeg(img, quality=qf, chroma_downsampling=False).numpy()
+    jpeg = tjpeg.encode(img, quality=qf, pixel_format=TJPF_RGB,
+                        jpeg_subsample=TJSAMP_444, flags=TJFLAG_ACCURATEDCT)
     block = np_extract_coef_block(jpeg)
     block = np_raster_scan(block)
     bit_length = get_block_bit_length(block, Y_DC_HUFF_TBL, Y_AC_HUFF_TBL)
@@ -64,7 +65,8 @@ def np_process(img, round):
 
 def np_test_process(img, round):
     qf = np.random.randint(50, 100)
-    jpeg = encode_jpeg(img, quality=qf, chroma_downsampling=False).numpy()
+    jpeg = tjpeg.encode(img, quality=qf, pixel_format=TJPF_RGB,
+                        jpeg_subsample=TJSAMP_444, flags=TJFLAG_ACCURATEDCT)
     coef = jpeg_to_coef(jpeg)
     code_length = get_image_code_length(coef)
     blocks = coef.reshape([-1, 64])
