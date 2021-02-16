@@ -2,6 +2,11 @@ import math
 import functools
 
 import numpy as np
+
+from turbojpeg import TurboJPEG
+from turbojpeg import TJPF_RGB, TJSAMP_420, TJSAMP_444, TJFLAG_ACCURATEDCT
+tjpeg = TurboJPEG()
+
 from huffman import *
 from jpeg2dct.numpy import loads
 
@@ -18,6 +23,19 @@ _zigzag_index = (
 )
 
 TO_ZIGZAG_INDEX = np.argsort(_zigzag_index)
+
+
+def encode_jpeg(img, qf, subsampling=False):
+   subsample = TJSAMP_420 if subsampling else TJSAMP_444
+   jpeg = tjpeg.encode(img, quality=qf, pixel_format=TJPF_RGB,
+                       jpeg_subsample=subsample, flags=TJFLAG_ACCURATEDCT)
+   return jpeg
+
+
+def decode_jpeg(jpeg):
+    img = tjpeg.decode(jpeg, pixel_format=TJPF_RGB,
+                       flags=TJFLAG_ACCURATEDCT)
+    return img
 
 
 def jpeg_to_coef(jpeg):
