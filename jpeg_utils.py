@@ -135,12 +135,13 @@ def encode_jpeg_from_qdct(coefs):
   size = y_coef.shape[0]
   dummy = np.zeros((size, size, 3), dtype=np.uint8)
   with open(dummy1_path, 'wb') as f:
-    f.write(encode_jpeg(dummy, 1, subsampling=subsampling)
+    f.write(encode_jpeg(dummy, 1, subsampling=subsampling))
   jobj = jpegio.read(dummy1_path)
   for i in range(2):
     np.copyto(jobj.quant_tables[i], np.ones((8, 8), dtype=np.int32))
   for i in range(3):
     np.copyto(jobj.coef_arrays[i], coef_arrays[i])
   jobj.write(dummy2_path)
-  jpeg = decode_jpeg(dummy2_path)
+  with open(dummy2_path, 'rb') as f:
+    jpeg = f.read()
   return jpeg
