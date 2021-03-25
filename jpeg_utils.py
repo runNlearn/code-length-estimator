@@ -132,7 +132,7 @@ def encode_jpeg_from_qdct(coefs, image_height, image_width):
 
   dummy1_path = '.dummy1.jpg'
   dummy2_path = '.dummy2.jpg'
-  dummy = np.zeros((image_heigth, image_width, 3), dtype=np.uint8)
+  dummy = np.zeros((image_height, image_width, 3), dtype=np.uint8)
   with open(dummy1_path, 'wb') as f:
     f.write(encode_jpeg(dummy, 1, subsampling=subsampling))
   jobj = jpegio.read(dummy1_path)
