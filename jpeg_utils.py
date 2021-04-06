@@ -112,13 +112,18 @@ def tile(coef):
   coef = np.reshape(coef, (h * 8, w * 8))
   return coef
 
-def encode_jpeg_from_qdct(coefs, image_height, image_width):
+
+def encode_jpeg_from_qdct(coefs, image_height, image_width, qtbs=None):
   """ Generate JPEG encoded file from the quantized dct coefficients
     Args:
       coefs: a list of dct coefficients, (y, cb, cr).
         dtype of coefficients have to be `np.int32`.
+      image_height: a height of the image.
+      image_width: a width of the image.
+      qdtbs: a list of quantization tables, (Luma, Chroma).
+        If it's `None`, `ones` tables will be stored.
     Returns:
-      JPEG bytes string 
+      JPEG bytes string
   """
   y_coef  = tile(coefs[0])
   cb_coef = tile(coefs[1])
@@ -130,6 +135,9 @@ def encode_jpeg_from_qdct(coefs, image_height, image_width):
   else: # 420
     subsampling = True
 
+  if qtbs is None:
+    qtbs = np.ones((2, 8, 8), dtype=np.int32)
+
   dummy1_path = '.dummy1.jpg'
   dummy2_path = '.dummy2.jpg'
   dummy = np.zeros((image_height, image_width, 3), dtype=np.uint8)
@@ -137,10 +145,12 @@ def encode_jpeg_from_qdct(coefs, image_height, image_width):
     f.write(encode_jpeg(dummy, 1, subsampling=subsampling))
   jobj = jpegio.read(dummy1_path)
   for i in range(2):
-    np.copyto(jobj.quant_tables[i], np.ones((8, 8), dtype=np.int32))
+    np.copyto(jobj.quant_tables[i], qtbs[i])
   for i in range(3):
     np.copyto(jobj.coef_arrays[i], coef_arrays[i])
   jobj.write(dummy2_path)
   with open(dummy2_path, 'rb') as f:
     jpeg = f.read()
   return jpeg
+
+
