@@ -169,5 +169,5 @@ def encode_and_bpp_quant(dct, qtbs, size, quantization=True):
 
   qdct = (y_qdct, cb_qdct, cr_qdct)
   jpeg = encode_jpeg_from_qdct(qdct, height, width, (qtb_l, qtb_c))
-  bpp = len(jpeg) * 8 / (input_size * input_size * 3)
+  bpp = len(jpeg) * 8 / (height * width * 3)
   return jpeg, bpp
