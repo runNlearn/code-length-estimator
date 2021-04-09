@@ -155,3 +155,19 @@ def encode_jpeg_from_qdct(coefs, image_height, image_width, qtbs=None):
   return jpeg
 
 
+def encode_and_bpp_quant(dct, qtbs, size, quantization=True):
+  qtb_l, qtb_c = qtbs
+  height, width = size
+  if quantization:
+    y_qdct = (dct[0] / qtb_l).round().astype(np.int32)
+    cb_qdct = (dct[1] / qtb_c).round().astype(np.int32)
+    cr_qdct = (dct[2] / qtb_c).round().astype(np.int32)
+  else:
+    y_qdct = dct[0]
+    cb_qdct = dct[1]
+    cr_qdct = dct[2]
+
+  qdct = (y_qdct, cb_qdct, cr_qdct)
+  jpeg = encode_jpeg_from_qdct(qdct, input_size, input_size, (qtb_l, qtb_c))
+  bpp = len(jpeg) * 8 / (input_size * input_size * 3)
+  return jpeg, bpp
