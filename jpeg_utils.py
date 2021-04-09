@@ -145,9 +145,15 @@ def encode_jpeg_from_qdct(coefs, image_height, image_width, qtbs=None):
     f.write(encode_jpeg(dummy, 1, subsampling=subsampling))
   jobj = jpegio.read(dummy1_path)
   for i in range(2):
-    np.copyto(jobj.quant_tables[i], qtbs[i])
+    for x in range(8):
+      for y in range(8):
+        jobj.quant_tables[i][x, y] = qtbs[i][x, y]
   for i in range(3):
-    np.copyto(jobj.coef_arrays[i], coef_arrays[i])
+    h, w = coef_arrays[i].shape[:2]
+    for x in range(h):
+      for y in range(w):
+        jobj.coef_arrays[i][x, y] = coef_arrays[i][x, y]
+
   jobj.write(dummy2_path)
   with open(dummy2_path, 'rb') as f:
     jpeg = f.read()
