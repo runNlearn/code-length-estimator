@@ -171,3 +171,20 @@ def encode_and_bpp_quant(dct, qtbs, size, quantization=True):
   jpeg = encode_jpeg_from_qdct(qdct, height, width, (qtb_l, qtb_c))
   bpp = len(jpeg) * 8 / (height * width * 3)
   return jpeg, bpp
+
+
+def batch_encode_and_bpp_quant(dct, qtb_l, qtb_c, size):
+  if len(qtb_l.shape) == 2:
+    func = functools.partial(
+        encode_and_bpp_quant,
+        qtbs=(qtb_l, qtb_c),
+        size=(size, size),
+    )
+    jpeg, bpp = zip(*map(func, dct))
+  else:
+    func = functools.partial(
+        encode_and_bpp_quant,
+        size=(size, size),
+    )
+    jpeg, bpp = zip(*map(func, dct, qtb_l, qtb_c))
+  return jpeg, bpp
