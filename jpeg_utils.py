@@ -13,7 +13,7 @@ from huffman import *
 from jpeg2dct.numpy import loads
 
 
-_zigzag_index = (
+FROM_ZIGZAG_INDEX = np.array([
     0,  1,  5,  6, 14, 15, 27, 28,
     2,  4,  7, 13, 16, 26, 29, 42,
     3,  8, 12, 17, 25, 30, 41, 43,
@@ -22,9 +22,9 @@ _zigzag_index = (
     20, 22, 33, 38, 46, 51, 55, 60,
     21, 34, 37, 47, 50, 56, 59, 61,
     35, 36, 48, 49, 57, 58, 62, 63,
-)
+])
 
-TO_ZIGZAG_INDEX = np.argsort(_zigzag_index)
+TO_ZIGZAG_INDEX = np.argsort(FROM_ZIGZAG_INDEX)
 
 
 def encode_jpeg(img, qf, subsampling=False):
