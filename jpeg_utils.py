@@ -155,17 +155,16 @@ def encode_jpeg_from_qdct(coefs, image_height, image_width, qtbs=None):
   return jpeg
 
 
-def encode_and_bpp_quant(dct, qtbs, size, quantization=True):
-  qtb_l, qtb_c = qtbs
+def encode_and_bpp_quant(y_dct, cb_dct, cr_dct, qtb_l, qtb_c, size, quantization=True):
   height, width = size
   if quantization:
-    y_qdct = (dct[0] / qtb_l).round().astype(np.int32)
-    cb_qdct = (dct[1] / qtb_c).round().astype(np.int32)
-    cr_qdct = (dct[2] / qtb_c).round().astype(np.int32)
+    y_qdct = (y_dct / qtb_l).round().astype(np.int32)
+    cb_qdct = (cb_dct / qtb_c).round().astype(np.int32)
+    cr_qdct = (cr_dct / qtb_c).round().astype(np.int32)
   else:
-    y_qdct = dct[0]
-    cb_qdct = dct[1]
-    cr_qdct = dct[2]
+    y_qdct = y_dct
+    cb_qdct = cb_dct
+    cr_qdct = cr_dct
 
   qdct = (y_qdct, cb_qdct, cr_qdct)
   jpeg = encode_jpeg_from_qdct(qdct, height, width, (qtb_l, qtb_c))
@@ -173,18 +172,20 @@ def encode_and_bpp_quant(dct, qtbs, size, quantization=True):
   return jpeg, bpp
 
 
-def batch_encode_and_bpp_quant(dct, qtb_l, qtb_c, size):
+def batch_encode_and_bpp_quant(y_dcts, cb_dcts, cr_dcts, qtb_l, qtb_c, size):
   if len(qtb_l.shape) == 2:
     func = functools.partial(
         encode_and_bpp_quant,
-        qtbs=(qtb_l, qtb_c),
+        qtb_l=qtb_l,
+        qtb_c=qtb_c,
         size=(size, size),
     )
-    jpeg, bpp = zip(*map(func, dct))
+    jpeg, bpp = zip(*map(func, y_dcts, cb_dcts, cr_dcts))
   else:
     func = functools.partial(
         encode_and_bpp_quant,
         size=(size, size),
     )
-    jpeg, bpp = zip(*map(func, dct, qtb_l, qtb_c))
+    jpeg, bpp = zip(*map(func, y_dcts, cb_dcts, cr_dcts, qtb_l, qtb_c))
   return jpeg, bpp
+
