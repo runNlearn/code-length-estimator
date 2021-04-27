@@ -189,3 +189,7 @@ def batch_encode_and_bpp_quant(y_dcts, cb_dcts, cr_dcts, qtb_l, qtb_c, size):
     jpeg, bpp = zip(*map(func, y_dcts, cb_dcts, cr_dcts, qtb_l, qtb_c))
   return jpeg, bpp
 
+
+def batch_bpp_quant(*inputs):
+  outputs = batch_encode_and_bpp_quant(*inputs) 
+  return outputs[-1]
